@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import nou.com.example.translatecomposeapp.ui.theme.TranslateComposeAppTheme
+import nou.com.example.translatecomposeapp.views.languages.LanguagesView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +31,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MyView()
+                    //MyView()
+                    LanguagesView()
                 }
             }
         }
