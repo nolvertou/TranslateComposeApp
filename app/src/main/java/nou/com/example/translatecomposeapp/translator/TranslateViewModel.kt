@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.google.mlkit.common.model.DownloadConditions
+import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
@@ -18,6 +19,22 @@ class TranslateViewModel : ViewModel() {
     fun onValue(text: String){
         state = state.copy(textToTranslate = text)
     }
+
+    val languageOptions = listOf(
+        TranslateLanguage.SPANISH,
+        TranslateLanguage.ENGLISH,
+        TranslateLanguage.ITALIAN,
+        TranslateLanguage.FRENCH,
+        TranslateLanguage.GERMAN
+    )
+
+    val itemSelection = listOf(
+        "SPANISH",
+        "ENGLISH",
+        "ITALIAN",
+        "FRENCH",
+        "GERMAN"
+    )
 
     fun onTranslate(text: String, context: Context, sourceLang: String, targetLang: String){
         val options = TranslatorOptions
