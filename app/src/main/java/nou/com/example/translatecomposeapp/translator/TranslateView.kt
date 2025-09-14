@@ -2,11 +2,20 @@ package nou.com.example.translatecomposeapp.translator
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -17,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -75,6 +85,49 @@ fun TranslateView(viewModel: TranslateViewModel) {
                     expandTarget = false
                 }
             )
+        }
+
+        Spacer(modifier = Modifier.height(15.dp))
+
+        OutlinedTextField(
+            value = state.textToTranslate,
+            onValueChange = { viewModel.onValue(it)},
+            label = { Text(text = "Type something ...")},
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done   // tells the keyboard to show a "Done" button
+            ),
+            keyboardActions = KeyboardActions(
+                // When the user taps the "Done" button on the keyboard, this lambda runs.
+                onDone = {
+                    viewModel.onTranslate(
+                        state.textToTranslate,
+                        context,
+                        selectedSourceLang,
+                        selectedTargetLang
+                    )
+                }
+            ),
+            // TODO: Fix issue, outlinedTextFieldColors was not founded
+            //colors =  TextFieldDefaults.outlinedTextFieldColors(
+            //    focusedIndicatorColor = Color.Transparent,
+            //   unfocusedIndicatorColor = Color.Transparent,
+            //),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        if(state.isDownloading){
+            CircularProgressIndicator()
+            Text(text = "Downloading Model, wait a moment")
+        }else{
+            OutlinedTextField(
+                value = state.translateText,
+                onValueChange = { },
+                label = { Text(text = "Translated Text")},
+                readOnly = false,
+                //TODO  colors ,
+                modifier = Modifier.fillMaxWidth().fillMaxHeight()
+            )
+
         }
     }
 }
