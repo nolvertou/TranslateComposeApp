@@ -1,4 +1,4 @@
-package nou.com.example.translatecomposeapp.views.languages
+package nou.com.example.translatecomposeapp.languages
 
 import androidx.compose.runtime.Composable
 

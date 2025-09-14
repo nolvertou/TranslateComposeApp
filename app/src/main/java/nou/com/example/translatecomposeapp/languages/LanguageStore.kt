@@ -1,4 +1,4 @@
-package nou.com.example.translatecomposeapp.views.languages
+package nou.com.example.translatecomposeapp.languages
 
 import android.content.Context
 import androidx.datastore.core.DataStore
