@@ -8,7 +8,9 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,14 +29,17 @@ class MainActivity : ComponentActivity() {
         val viewModel : TranslateViewModel by viewModels()
         setContent {
             TranslateComposeAppTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    //MyView()
-                    //LanguagesView()
-                    TranslateView(viewModel)
+                Scaffold {
+                    Surface(
+                        modifier = Modifier.fillMaxSize().padding(it),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        //MyView()
+                        //LanguagesView()
+                        TranslateView(viewModel)
+                    }
                 }
+
             }
         }
     }
