@@ -53,11 +53,11 @@ class TranslateViewModel : ViewModel() {
 
             }.addOnFailureListener{
                 Toast.makeText(context, "Downloading Model...", Toast.LENGTH_SHORT).show()
-                downloadingModel(languageTranslator, context)
+                downloadingModel(languageTranslator, context, text)
             }
     }
 
-    private fun downloadingModel(languageTranslator: Translator, context: Context){
+    private fun downloadingModel(languageTranslator: Translator, context: Context, text: String){
         state = state.copy(
             isDownloading = true
         )
@@ -70,6 +70,19 @@ class TranslateViewModel : ViewModel() {
             .downloadModelIfNeeded(conditions)
             .addOnSuccessListener {
                 Toast.makeText(context, "Model was downloaded successfully", Toast.LENGTH_SHORT).show()
+
+                // Retry translation now that model is ready
+                languageTranslator.translate(text)
+                    .addOnSuccessListener {translatedText ->
+                        state = state.copy(
+                            translateText = translatedText,
+                            isDownloading = false
+                        )
+                    }
+                    .addOnFailureListener{ error ->
+                        Toast.makeText(context, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+                        state = state.copy(isDownloading = false)
+                    }
             }
             .addOnFailureListener{
                 Toast.makeText(context, "Failed model download", Toast.LENGTH_SHORT).show()
