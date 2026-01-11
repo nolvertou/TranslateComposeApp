@@ -89,4 +89,11 @@ class TranslateViewModel : ViewModel() {
             }
     }
 
+    fun clean(){
+        state = state.copy(
+            textToTranslate = "",
+            translateText = ""
+        )
+    }
+
 }

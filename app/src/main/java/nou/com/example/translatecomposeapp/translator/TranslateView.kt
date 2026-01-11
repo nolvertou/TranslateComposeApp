@@ -12,6 +12,11 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.Translate
+import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -28,6 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import nou.com.example.translatecomposeapp.R
 
 @Composable
 fun TranslateView(viewModel: TranslateViewModel) {
@@ -114,6 +120,22 @@ fun TranslateView(viewModel: TranslateViewModel) {
             //),
             modifier = Modifier.fillMaxWidth()
         )
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            MainIconButton(icon = Icons.Filled.Mic) { }
+            MainIconButton(icon = Icons.Filled.Translate) {
+                viewModel.onTranslate(
+                    state.textToTranslate,
+                    context,
+                    selectedSourceLang,
+                    selectedTargetLang
+                )
+            }
+            MainIconButton(icon = Icons.AutoMirrored.Filled.VolumeUp) { }
+            MainIconButton(icon = Icons.Filled.Delete) {
+                viewModel.clean()
+            }
+        }
 
         if(state.isDownloading){
             CircularProgressIndicator()
