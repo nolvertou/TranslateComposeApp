@@ -1,5 +1,7 @@
 package nou.com.example.translatecomposeapp.translator
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -33,8 +36,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import nou.com.example.translatecomposeapp.R
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun TranslateView(viewModel: TranslateViewModel) {
     val state = viewModel.state
@@ -50,6 +57,29 @@ fun TranslateView(viewModel: TranslateViewModel) {
     var selectedSourceLang by remember { mutableStateOf(languageOptions[0]) }
     var selectedTargetLang by remember { mutableStateOf(languageOptions[1]) }
 
+    // It creates a permissionState variable that remembers the state of the RECORD_AUDIO permission.
+    val permissionState = rememberPermissionState(permission = Manifest.permission.RECORD_AUDIO)
+
+    // This SideEffect will be executed after the initial composition,
+    //  and it will launch a request for the RECORD_AUDIO permission.
+    SideEffect {
+        permissionState.launchPermissionRequest()
+    }
+
+    // - Creates a launcher for the speech recognition activity.
+    // - When the speech recognizer returns a result, the onResult lambda is executed.
+    // - It takes the result, converts it to a string, removes the brackets,
+    //   trims any leading whitespace, and then passes the cleaned-up text to the onValue
+    //   function of the viewModel.
+    val speechRecognitionLauncher = rememberLauncherForActivityResult(
+        contract = SpeechRecognizerContract(),
+        onResult = {
+            viewModel.onValue(it.toString()
+                .replace("[","")
+                .replace("]", "")
+                .trimStart()
+            )
+        })
 
     Column(
         modifier = Modifier
@@ -122,7 +152,17 @@ fun TranslateView(viewModel: TranslateViewModel) {
         )
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            MainIconButton(icon = Icons.Filled.Mic) { }
+            // onClick handler for the microphone icon button.
+            MainIconButton(icon = Icons.Filled.Mic) {
+                // It checks if the RECORD_AUDIO permission has been granted.
+                // If it has, it launches the speechRecognitionLauncher.
+                // Otherwise, it launches the permission request again.
+                if(permissionState.status.isGranted){
+                    speechRecognitionLauncher.launch(Unit)
+                }else{
+                    permissionState.launchPermissionRequest()
+                }
+            }
             MainIconButton(icon = Icons.Filled.Translate) {
                 viewModel.onTranslate(
                     state.textToTranslate,
