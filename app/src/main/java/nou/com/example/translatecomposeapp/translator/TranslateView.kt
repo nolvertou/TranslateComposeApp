@@ -171,7 +171,9 @@ fun TranslateView(viewModel: TranslateViewModel) {
                     selectedTargetLang
                 )
             }
-            MainIconButton(icon = Icons.AutoMirrored.Filled.VolumeUp) { }
+            MainIconButton(icon = Icons.AutoMirrored.Filled.VolumeUp) {
+                viewModel.textToSpeech(context)
+            }
             MainIconButton(icon = Icons.Filled.Delete) {
                 viewModel.clean()
             }

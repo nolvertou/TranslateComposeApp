@@ -1,6 +1,7 @@
 package nou.com.example.translatecomposeapp.translator
 
 import android.content.Context
+import android.speech.tts.TextToSpeech
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,6 +12,7 @@ import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
+import java.util.Locale
 
 class TranslateViewModel : ViewModel() {
     var state by mutableStateOf(TranslateState())
@@ -94,6 +96,33 @@ class TranslateViewModel : ViewModel() {
             textToTranslate = "",
             translateText = ""
         )
+    }
+    //  It's initialized to null and will hold the instance of the TextToSpeech engine.
+    private var textToSpeech: TextToSpeech? = null
+
+    fun textToSpeech(context: Context){
+        textToSpeech = TextToSpeech(context){
+            // This checks if the TextToSpeech engine was successfully initialized.
+            if(it == TextToSpeech.SUCCESS){
+                // This is a safe call to execute the block of code only if textToSpeech is not null.
+                textToSpeech?.let { txtToSpeech ->
+                    // This sets the language for the speech synthesis.
+                    // Locale.ROOT represents a language-neutral locale.
+                    txtToSpeech.language = Locale.ROOT
+                    // This sets the speed at which the text will be spoken. 1.0f is the normal speech rate.
+                    txtToSpeech.setSpeechRate(1.0f)
+                    // This speaks the text stored in the state.translateText variable.
+                    txtToSpeech.speak(
+                        state.translateText, // This is the text that will be spoken,
+                        // This queuing strategy adds the new utterance to the end of the playback queue.
+                        TextToSpeech.QUEUE_ADD, //
+                        null,
+                        null
+                    )
+
+                }
+            }
+        }
     }
 
 }
