@@ -49,13 +49,16 @@ fun TranslateView(viewModel: TranslateViewModel) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val languageOptions = viewModel.languageOptions
     val itemsSelection = viewModel.itemSelection
-
+    val itemVoice = viewModel.itemsVoice
     var indexSource by remember{ mutableIntStateOf(0) }
     var indexTarget by remember{ mutableIntStateOf(1) }
     var expandSource by remember{ mutableStateOf(false) }
     var expandTarget by remember{ mutableStateOf(false) }
     var selectedSourceLang by remember { mutableStateOf(languageOptions[0]) }
     var selectedTargetLang by remember { mutableStateOf(languageOptions[1]) }
+    var selectedTargetVoice by remember { mutableStateOf(itemVoice[1]) } // Select English by default
+
+
 
     // It creates a permissionState variable that remembers the state of the RECORD_AUDIO permission.
     val permissionState = rememberPermissionState(permission = Manifest.permission.RECORD_AUDIO)
@@ -100,6 +103,7 @@ fun TranslateView(viewModel: TranslateViewModel) {
                     indexSource = index
                     selectedSourceLang = languageOptions[index]
                     expandSource = false
+                    selectedTargetVoice = itemVoice[index]
                 }
             )
 
@@ -172,7 +176,7 @@ fun TranslateView(viewModel: TranslateViewModel) {
                 )
             }
             MainIconButton(icon = Icons.AutoMirrored.Filled.VolumeUp) {
-                viewModel.textToSpeech(context)
+                viewModel.textToSpeech(context, selectedTargetVoice)
             }
             MainIconButton(icon = Icons.Filled.Delete) {
                 viewModel.clean()

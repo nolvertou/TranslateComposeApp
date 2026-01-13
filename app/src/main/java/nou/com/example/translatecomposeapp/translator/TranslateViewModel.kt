@@ -38,6 +38,14 @@ class TranslateViewModel : ViewModel() {
         "GERMAN"
     )
 
+    val itemsVoice = listOf(
+        Locale.ROOT,
+        Locale.ENGLISH,
+        Locale.ITALIAN,
+        Locale.FRANCE,
+        Locale.GERMAN
+    )
+
     fun onTranslate(text: String, context: Context, sourceLang: String, targetLang: String){
         val options = TranslatorOptions
             .Builder()
@@ -100,7 +108,7 @@ class TranslateViewModel : ViewModel() {
     //  It's initialized to null and will hold the instance of the TextToSpeech engine.
     private var textToSpeech: TextToSpeech? = null
 
-    fun textToSpeech(context: Context){
+    fun textToSpeech(context: Context, voice: Locale){
         textToSpeech = TextToSpeech(context){
             // This checks if the TextToSpeech engine was successfully initialized.
             if(it == TextToSpeech.SUCCESS){
@@ -108,7 +116,7 @@ class TranslateViewModel : ViewModel() {
                 textToSpeech?.let { txtToSpeech ->
                     // This sets the language for the speech synthesis.
                     // Locale.ROOT represents a language-neutral locale.
-                    txtToSpeech.language = Locale.ROOT
+                    txtToSpeech.language = voice
                     // This sets the speed at which the text will be spoken. 1.0f is the normal speech rate.
                     txtToSpeech.setSpeechRate(1.0f)
                     // This speaks the text stored in the state.translateText variable.
